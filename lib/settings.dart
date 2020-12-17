@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import "package:esense_flutter/esense.dart";
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dart:async';
 
 class SettingsPage extends StatefulWidget {
@@ -9,6 +11,31 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsState extends State<SettingsPage> {
+  String esenseName = "Kein Gerät ausgewählt";
+  bool esenseSelected = false;
+
+  @override
+  void initState() {
+    SharedPreferences.getInstance().then((prefs) {
+      var v = prefs.getString("esenseName");
+      if (v == null) return;
+      setState(() {
+        esenseName = v;
+        esenseSelected = true;
+      });
+    });
+  }
+
+  void selectEsense(ctx) {
+    showDialog(
+        context: ctx,
+        builder: (BuildContext ctx) {
+          return BlueDeviceSelector();
+        });
+  }
+
+  void getEsenseInfo() {}
+
   @override
   Widget build(BuildContext ctx) {
     var x = ESenseManager();
@@ -30,16 +57,16 @@ class SettingsState extends State<SettingsPage> {
           title: Text("Einstellungen"),
         ),
         body: Column(children: [
-          ElevatedButton(
-            child: Text("Select device"),
-            onPressed: () {
-              showDialog(
-                  context: ctx,
-                  builder: (BuildContext ctx) {
-                    return BlueDeviceSelector();
-                  });
-            },
-          )
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text("eSense"),
+            ElevatedButton(
+              child: Text(esenseName),
+              onPressed: () {
+                selectEsense(ctx);
+              },
+            ),
+            ElevatedButton(child: Icon(Icons.info), onPressed: getEsenseInfo),
+          ]),
         ]));
   }
 }

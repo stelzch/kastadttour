@@ -29,6 +29,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   esense_flutter: any
   flutter_blue: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:
