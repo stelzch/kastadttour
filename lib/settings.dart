@@ -112,19 +112,22 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
   bool devicesAdded = false;
   StreamSubscription subscription;
   FlutterBlue flutterBlue = FlutterBlue.instance;
+  final scanTimeout = Duration(seconds: 5);
+  Timer scanTimer;
 
   @override
   void initState() {
     super.initState();
 
     blueDevices = List<Widget>();
-    flutterBlue.startScan(timeout: Duration(seconds: 5));
+    flutterBlue.startScan(timeout: scanTimeout);
     subscription = flutterBlue.scanResults.listen((results) {
       for (ScanResult r in results) {
         setState(() {
           if (!devicesAdded) {
             blueDevices.clear();
             devicesAdded = true;
+            scanTimer.cancel();
           }
 
           blueDevices.add(SimpleDialogOption(
@@ -135,6 +138,15 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
           ));
         });
       }
+    });
+
+    scanTimer = new Timer(scanTimeout, () {
+      setState(() {
+        if (!devicesAdded) {
+          blueDevices.clear();
+          blueDevices.add(Center(child: Text("Keine Geräte gefunden")));
+        }
+      });
     });
 
     blueDevices.add(Center(child: CircularProgressIndicator()));
