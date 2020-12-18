@@ -112,7 +112,8 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
   bool devicesAdded = false;
   StreamSubscription subscription;
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  final scanTimeout = Duration(seconds: 5);
+  final SCAN_DURATION = Duration(seconds: 5);
+  final MAC_PREFIX = "00:04:79:";
   Timer scanTimer;
 
   @override
@@ -120,7 +121,7 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
     super.initState();
 
     blueDevices = List<Widget>();
-    flutterBlue.startScan(timeout: scanTimeout);
+    flutterBlue.startScan(timeout: SCAN_DURATION);
     subscription = flutterBlue.scanResults.listen((results) {
       for (ScanResult r in results) {
         setState(() {
@@ -129,6 +130,8 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
             devicesAdded = true;
             scanTimer.cancel();
           }
+
+          if (!r.device.id.toString().startsWith(MAC_PREFIX)) return;
 
           blueDevices.add(SimpleDialogOption(
             onPressed: () {
@@ -140,7 +143,7 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
       }
     });
 
-    scanTimer = new Timer(scanTimeout, () {
+    scanTimer = new Timer(SCAN_DURATION, () {
       setState(() {
         if (!devicesAdded) {
           blueDevices.clear();
