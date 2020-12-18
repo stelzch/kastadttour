@@ -26,6 +26,8 @@ class SettingsState extends State<SettingsPage> {
       setState(() {
         esenseName = v;
         esenseSelected = true;
+
+        ESenseManager.connect(esenseName);
       });
     });
   }
@@ -56,11 +58,18 @@ class SettingsState extends State<SettingsPage> {
 
       setState(() {
         esenseName = deviceName;
+        ESenseManager.connect(deviceName);
       });
     }
   }
 
-  void getEsenseInfo() {}
+  void getEsenseInfo(ctx) async {
+    await showDialog(
+        context: ctx,
+        builder: (BuildContext ctx) {
+          return ESenseInfo();
+        });
+  }
 
   @override
   Widget build(BuildContext ctx) {
@@ -83,7 +92,11 @@ class SettingsState extends State<SettingsPage> {
                 selectEsense(ctx);
               },
             ),
-            ElevatedButton(child: Icon(Icons.info), onPressed: getEsenseInfo),
+            ElevatedButton(
+                child: Icon(Icons.info),
+                onPressed: () {
+                  getEsenseInfo(ctx);
+                }),
           ]),
         ]));
   }
@@ -138,5 +151,44 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
     super.dispose();
 
     subscription?.cancel();
+  }
+}
+
+class ESenseInfo extends StatefulWidget {
+  @override
+  State<ESenseInfo> createState() => ESenseInfoState();
+}
+
+class ESenseInfoState extends State<ESenseInfo> {
+  List<Widget> content;
+  @override
+  void initState() {
+    super.initState();
+
+    content = [Center(child: CircularProgressIndicator())];
+
+    ESenseManager.isConnected().then((isConnected) async {
+      if (!isConnected) {
+        setState(() {
+          content = [
+            Center(
+                child: const Text(
+                    "eSense nicht verbunden.\nWar das richtige Gerät ausgewählt?\nSind die Earables eingeschaltet und in der Nähe?\nIst Bluetooth eingeschaltet?"))
+          ];
+        });
+      } else {
+        var name = await ESenseManager.getDeviceName();
+        setState(() {
+          content = [
+            Center(child: const Text("Erfolgreich mit Earables verbunden")),
+          ];
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext ctx) {
+    return SimpleDialog(title: const Text('eSense Info'), children: content);
   }
 }
