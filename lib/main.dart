@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'settings.dart';
+import 'interact.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: SettingsPage(),
+      home: YesNoDialog(),
     );
   }
 }
