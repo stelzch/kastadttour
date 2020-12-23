@@ -55,7 +55,7 @@ class LocationCard extends StatelessWidget {
               child: Image(
                   image: AssetImage(info.coverImagePath), fit: BoxFit.cover)),
           Padding(
-              padding: EdgeInsets.only(top: 6, left: 6, right: 6, bottom: 0),
+              padding: EdgeInsets.only(top: 6, left: 8, right: 8, bottom: 0),
               child: Column(children: [
                 Row(children: [
                   Padding(
