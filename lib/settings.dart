@@ -166,6 +166,7 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
     super.dispose();
 
     subscription?.cancel();
+    scanTimer?.cancel();
   }
 }
 

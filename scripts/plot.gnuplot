@@ -1,7 +1,8 @@
 set terminal png size 1920,1080
 set datafile separator comma
 set xdata time
-set timefmt "%Y-%m-%d %H:%M:%S"
+#set timefmt "%Y-%m-%d %H:%M:%S"
+set timefmt "%Y-%m-%dT%H:%M:%S"
 set autoscale x
 set autoscale y
 

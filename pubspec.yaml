@@ -30,6 +30,7 @@ dependencies:
   esense_flutter: any
   flutter_blue: any
   shared_preferences: any
+  yaml: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +46,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/locations/
+    - assets/locations/schloss/
+    - assets/locations/hebeldenkmal/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -19,15 +19,16 @@ class YesNoDialogState extends State<YesNoDialog> {
   AccelerometerOffsetRead offset;
 
   void sensorEvent(SensorEvent e) {
-    print("Sensor event: $e");
+    //print("Sensor event: $e");
     if (offset == null) return;
+    var now = new DateTime.now();
 
-    var accX = e.accel[0] - offset.offsetX;
-    var accY = e.accel[1] - offset.offsetY;
-    var accZ = e.accel[2] - offset.offsetZ;
+    var accX = e.accel[0] + offset.offsetX;
+    var accY = e.accel[1] + offset.offsetY;
+    var accZ = e.accel[2] + offset.offsetZ;
 
     print(
-        "ESENSELOG||${e.timestamp},$accX,$accY,$accZ,${e.gyro[0]},${e.gyro[1]},${e.gyro[2]}");
+        "ESENSELOG||${now.toIso8601String()},$accX,$accY,$accZ,${e.gyro[0]},${e.gyro[1]},${e.gyro[2]}");
   }
 
   void esenseEvents(e) {
@@ -44,7 +45,7 @@ class YesNoDialogState extends State<YesNoDialog> {
     print("Connection event: $e");
     if (e.type == ConnectionType.connected) {
       await sensorSub?.cancel();
-      await ESenseManager.setSamplingRate(15);
+      await ESenseManager.setSamplingRate(50);
 
       esenseSub = ESenseManager.eSenseEvents.listen(esenseEvents);
       Timer(Duration(seconds: 1), ESenseManager.getAccelerometerOffset);
