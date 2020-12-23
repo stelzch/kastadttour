@@ -36,7 +36,6 @@ class LocationOverviewState extends State<LocationOverview> {
             itemBuilder: _getNthChildCard,
             itemCount: numCards,
             padding: const EdgeInsets.only(left: 25, right: 25)));
-    //body: Column(children: _getChildCards()));
   }
 }
 
@@ -44,6 +43,10 @@ class LocationCard extends StatelessWidget {
   final LocationInfo info;
 
   LocationCard({Key key, LocationInfo this.info}) : super(key: key);
+
+  void gotoLocationPage(BuildContext ctx) {
+    Navigator.pushNamed(ctx, LocationPage.routeName, arguments: info);
+  }
 
   @override
   Widget build(BuildContext ctx) {
@@ -75,31 +78,64 @@ class LocationCard extends StatelessWidget {
                 Row(children: [
                   FlatButton(
                       child: Text("Mehr", style: TextStyle(color: Colors.blue)),
-                      onPressed: () {})
+                      onPressed: () {
+                        gotoLocationPage(ctx);
+                      }),
                 ], mainAxisAlignment: MainAxisAlignment.end),
               ]))
         ]));
   }
 }
 
+class LocationPage extends StatelessWidget {
+  static const routeName = "/locationPage";
+  @override
+  Widget build(BuildContext ctx) {
+    var textTheme = Theme.of(ctx).textTheme;
+
+    LocationInfo info = ModalRoute.of(ctx).settings.arguments;
+    return Scaffold(
+        appBar: AppBar(title: Text(info.name)),
+        body: SingleChildScrollView(
+            child: Column(children: [
+          Image(image: AssetImage(info.coverImagePath), fit: BoxFit.cover),
+          Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(children: [Text(info.name, style: textTheme.headline4)]),
+                  Padding(
+                      child: Text(info.description, style: textTheme.bodyText2),
+                      padding: EdgeInsets.only(top: 10, bottom: 10)),
+                ],
+              )),
+        ])));
+  }
+}
+
 class LocationInfo {
+  final String id;
   final String name;
   final String description;
   final String coverImagePath;
 
   const LocationInfo(
-      {String this.name, String this.description, String this.coverImagePath});
+      {String this.id,
+      String this.name,
+      String this.description,
+      String this.coverImagePath});
 }
 
 class LocationInfoLoader {
   static Stream<LocationInfo> load() async* {
     String index = await rootBundle.loadString('assets/locations/list.yml');
     YamlList l = loadYaml(index);
-    for (String locationName in l) {
-      var dir = 'assets/locations/${locationName}/';
+    for (String locationId in l) {
+      var dir = 'assets/locations/${locationId}/';
       YamlMap info = loadYaml(await rootBundle.loadString(dir + 'info.yml'));
 
       yield new LocationInfo(
+          id: locationId,
           name: info['name'],
           description: info['description'],
           coverImagePath: dir + info['cover']['src']);
