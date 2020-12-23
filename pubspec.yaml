@@ -31,6 +31,7 @@ dependencies:
   flutter_blue: any
   shared_preferences: any
   yaml: ^2.2.1
+  flutter_sound_lite: any
 
 dev_dependencies:
   flutter_test:
