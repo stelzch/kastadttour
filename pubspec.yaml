@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: any
   yaml: ^2.2.1
   flutter_sound_lite: any
+  flutter_map: any
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,114 @@ flutter:
     - assets/locations/schloss/
     - assets/locations/hebeldenkmal/
     - assets/locations/ehrenhof/
+    - assets/map/
+    - assets/map/12/2143/
+    - assets/map/13/4286/
+    - assets/map/13/4287/
+    - assets/map/14/8572/
+    - assets/map/14/8573/
+    - assets/map/14/8574/
+    - assets/map/14/8575/
+    - assets/map/15/17145/
+    - assets/map/15/17146/
+    - assets/map/15/17147/
+    - assets/map/15/17148/
+    - assets/map/15/17149/
+    - assets/map/15/17150/
+    - assets/map/15/17151/
+    - assets/map/16/34290/
+    - assets/map/16/34291/
+    - assets/map/16/34292/
+    - assets/map/16/34293/
+    - assets/map/16/34294/
+    - assets/map/16/34295/
+    - assets/map/16/34296/
+    - assets/map/16/34297/
+    - assets/map/16/34298/
+    - assets/map/16/34299/
+    - assets/map/16/34300/
+    - assets/map/16/34301/
+    - assets/map/16/34302/
+    - assets/map/16/34303/
+    - assets/map/17/68581/
+    - assets/map/17/68582/
+    - assets/map/17/68583/
+    - assets/map/17/68584/
+    - assets/map/17/68585/
+    - assets/map/17/68586/
+    - assets/map/17/68587/
+    - assets/map/17/68588/
+    - assets/map/17/68589/
+    - assets/map/17/68590/
+    - assets/map/17/68591/
+    - assets/map/17/68592/
+    - assets/map/17/68593/
+    - assets/map/17/68594/
+    - assets/map/17/68595/
+    - assets/map/17/68596/
+    - assets/map/17/68597/
+    - assets/map/17/68598/
+    - assets/map/17/68599/
+    - assets/map/17/68600/
+    - assets/map/17/68601/
+    - assets/map/17/68602/
+    - assets/map/17/68603/
+    - assets/map/17/68604/
+    - assets/map/17/68605/
+    - assets/map/17/68606/
+    - assets/map/17/68607/
+    - assets/map/18/137163/
+    - assets/map/18/137164/
+    - assets/map/18/137165/
+    - assets/map/18/137166/
+    - assets/map/18/137167/
+    - assets/map/18/137168/
+    - assets/map/18/137169/
+    - assets/map/18/137170/
+    - assets/map/18/137171/
+    - assets/map/18/137172/
+    - assets/map/18/137173/
+    - assets/map/18/137174/
+    - assets/map/18/137175/
+    - assets/map/18/137176/
+    - assets/map/18/137177/
+    - assets/map/18/137178/
+    - assets/map/18/137179/
+    - assets/map/18/137180/
+    - assets/map/18/137181/
+    - assets/map/18/137182/
+    - assets/map/18/137183/
+    - assets/map/18/137184/
+    - assets/map/18/137185/
+    - assets/map/18/137186/
+    - assets/map/18/137187/
+    - assets/map/18/137188/
+    - assets/map/18/137189/
+    - assets/map/18/137190/
+    - assets/map/18/137191/
+    - assets/map/18/137192/
+    - assets/map/18/137193/
+    - assets/map/18/137194/
+    - assets/map/18/137195/
+    - assets/map/18/137196/
+    - assets/map/18/137197/
+    - assets/map/18/137198/
+    - assets/map/18/137199/
+    - assets/map/18/137200/
+    - assets/map/18/137201/
+    - assets/map/18/137202/
+    - assets/map/18/137203/
+    - assets/map/18/137204/
+    - assets/map/18/137205/
+    - assets/map/18/137206/
+    - assets/map/18/137207/
+    - assets/map/18/137208/
+    - assets/map/18/137209/
+    - assets/map/18/137210/
+    - assets/map/18/137211/
+    - assets/map/18/137212/
+    - assets/map/18/137213/
+    - assets/map/18/137214/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
