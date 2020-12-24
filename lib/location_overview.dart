@@ -5,6 +5,7 @@ import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'dart:typed_data';
 
 class LocationOverview extends StatefulWidget {
+  static const routeName = "/locationOverview";
   @override
   State<LocationOverview> createState() => LocationOverviewState();
 }

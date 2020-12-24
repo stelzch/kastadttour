@@ -34,6 +34,8 @@ class MyApp extends StatelessWidget {
         home: MapPage(),
         routes: {
           LocationPage.routeName: (ctx) => LocationPage(),
+          LocationOverview.routeName: (ctx) => LocationOverview(),
+          SettingsPage.routeName: (ctx) => SettingsPage(),
         });
   }
 }

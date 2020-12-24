@@ -8,6 +8,7 @@ import 'dart:async';
 const String CONFIG_ESENSE_NAME = "esenseName";
 
 class SettingsPage extends StatefulWidget {
+  static const String routeName = "/settings";
   @override
   State<SettingsPage> createState() => SettingsState();
 }
