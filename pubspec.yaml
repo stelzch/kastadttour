@@ -36,6 +36,8 @@ dependencies:
   sqflite: any
   path: any
   synchronized: any
+  flutter_local_notifications: ^1.4.4+2
+  workmanager: ^0.2.3
 
 dev_dependencies:
   flutter_test:

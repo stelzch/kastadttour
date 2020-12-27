@@ -4,8 +4,18 @@ import 'interact.dart';
 import 'location_overview.dart';
 import 'map.dart';
 import 'persistence.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:workmanager/workmanager.dart';
+import 'dart:async';
+import 'notifications.dart';
+
+FlutterLocalNotificationsPlugin notifications;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  initNotifications();
+
   runApp(MyApp());
 }
 

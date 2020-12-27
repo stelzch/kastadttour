@@ -5,6 +5,7 @@ import 'location_overview.dart';
 import 'persistence.dart';
 import 'settings.dart';
 import 'geometry.dart';
+import 'notifications.dart';
 
 class MapPage extends StatefulWidget {
   State<MapPage> createState() => MapPageState();
@@ -63,6 +64,7 @@ class MapPageState extends State<MapPage> {
 
       if (pointInPolygon(_zonePolygons[idx], pos)) {
         print("Now in region ${info.name}");
+        showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}");
       }
     }
   }
