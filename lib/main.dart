@@ -3,6 +3,7 @@ import 'settings.dart';
 import 'interact.dart';
 import 'location_overview.dart';
 import 'map.dart';
+import 'persistence.dart';
 
 void main() {
   runApp(MyApp());

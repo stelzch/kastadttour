@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'location_overview.dart';
+import 'settings.dart';
 
 class MapPage extends StatefulWidget {
   State<MapPage> createState() => MapPageState();
@@ -17,6 +18,27 @@ class MapPageState extends State<MapPage> {
     super.initState();
 
     _mapController = MapController();
+  }
+
+  void _handleMapTap(LatLng latlng) {
+    _locationUpdate(latlng);
+  }
+
+  void _locationUpdate(LatLng latlng) {
+    /*
+    var modifiedInfo = info.copyWith(lastVisit: DateTime.now());
+    LocationInfoDB.updateLastVisit(modifiedInfo);
+
+    setState(() {
+      info = modifiedInfo;
+    });
+    if (action == LocationCardAction.markVisited) {
+    } else {}
+
+    setState(() {});
+    */
+
+    print("Now at location ${latlng.latitude} ${latlng.longitude}");
   }
 
   @override
@@ -35,7 +57,7 @@ class MapPageState extends State<MapPage> {
         drawer: Drawer(
             child: ListView(
           padding: EdgeInsets.zero,
-          children: const <Widget>[
+          children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.lightBlue),
               child: Text('KaCityGuide',
@@ -44,6 +66,9 @@ class MapPageState extends State<MapPage> {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Einstellungen'),
+              onTap: () {
+                Navigator.pushNamed(ctx, SettingsPage.routeName);
+              },
             ),
             Padding(
                 padding: EdgeInsets.only(top: 30, left: 8),
@@ -63,6 +88,7 @@ class MapPageState extends State<MapPage> {
                 maxZoom: 17,
                 screenSize: MediaQuery.of(ctx).size,
                 slideOnBoundaries: true,
+                onTap: _handleMapTap,
                 swPanBoundary: LatLng(48.9906, 8.3657),
                 nePanBoundary: LatLng(49.0257, 8.4358)),
             layers: [

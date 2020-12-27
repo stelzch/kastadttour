@@ -33,6 +33,9 @@ dependencies:
   yaml: ^2.2.1
   flutter_sound_lite: any
   flutter_map: any
+  sqflite: any
+  path: any
+  synchronized: any
 
 dev_dependencies:
   flutter_test:
