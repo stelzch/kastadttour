@@ -3,6 +3,10 @@ cover:
   src: hebeldenkmal.jpg
   attribution: https://commons.wikimedia.org/wiki/User:Hozro
 audio: info.mp3
+zone:
+  - {lat: 49.01456476516256, lng: 8.40322240703824}
+  - {lat: 49.014134885443006, lng: 8.402840070335024}
+  - {lat: 49.014165591260365, lng: 8.403495504683379}
 description: >
   Dieses Denkmal ist dem deutschen Schriftsteller Johann Peter Hebel gewidmet.
   Er wurde 1760 in Basel geboren und wuchs im Wiesental südlich des Feldbergs im

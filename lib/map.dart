@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'location_overview.dart';
+import 'persistence.dart';
 import 'settings.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,12 +13,27 @@ class MapPageState extends State<MapPage> {
   MapController _mapController;
   final LatLng swMapCorner = LatLng(48.9906, 8.3657);
   final LatLng neMapCorner = LatLng(49.0257, 8.4358);
+  List<LocationInfo> _locationInfo;
+  List<Polygon> _zonePolygons;
 
   @override
   void initState() {
     super.initState();
 
     _mapController = MapController();
+    _locationInfo = List<LocationInfo>();
+    _zonePolygons = List<Polygon>();
+
+    LocationInfoDB.get().listen((location) {
+      _locationInfo.add(location);
+
+      _zonePolygons.add(Polygon(
+        points: location.zone,
+        color: Color.fromARGB(100, 50, 50, 255),
+        borderColor: Color.fromARGB(255, 0, 0, 100),
+        borderStrokeWidth: 1.0,
+      ));
+    });
   }
 
   void _handleMapTap(LatLng latlng) {
@@ -98,6 +114,10 @@ class MapPageState extends State<MapPage> {
                 urlTemplate: "assets/map/{z}/{x}/{y}.png",
                 updateInterval: 50,
                 retinaMode: true,
+              ),
+              PolygonLayerOptions(
+                polygons: _zonePolygons,
+                polygonCulling: false,
               ),
             ],
           ))

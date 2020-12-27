@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:latlong/latlong.dart';
 
 class LocationInfo {
   final String id;
@@ -11,6 +12,7 @@ class LocationInfo {
   final String coverImagePath;
   final String audioPath;
   final DateTime lastVisit;
+  final List<LatLng> zone;
 
   const LocationInfo(
       {String this.id,
@@ -18,7 +20,8 @@ class LocationInfo {
       String this.description,
       String this.coverImagePath,
       String this.audioPath,
-      DateTime this.lastVisit});
+      DateTime this.lastVisit,
+      List<LatLng> this.zone});
 
   LocationInfo copyWith(
       {String id,
@@ -26,14 +29,16 @@ class LocationInfo {
       String description,
       String coverImagePath,
       String audioPath,
-      DateTime lastVisit}) {
+      DateTime lastVisit,
+      List<LatLng> zone}) {
     return LocationInfo(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description ?? this.description,
         coverImagePath: coverImagePath ?? this.coverImagePath,
         audioPath: audioPath ?? this.audioPath,
-        lastVisit: lastVisit ?? this.lastVisit);
+        lastVisit: lastVisit ?? this.lastVisit,
+        zone: zone ?? this.zone);
   }
 
   LocationInfo copyWithoutVisit() {
@@ -42,7 +47,8 @@ class LocationInfo {
         name: name,
         description: description,
         coverImagePath: coverImagePath,
-        audioPath: audioPath);
+        audioPath: audioPath,
+        zone: zone);
   }
 }
 
@@ -67,13 +73,20 @@ class LocationInfoDB {
       var dir = 'assets/locations/${locationId}/';
       YamlMap info = loadYaml(await rootBundle.loadString(dir + 'info.yml'));
 
+      List<LatLng> zone = List<LatLng>();
+
+      for (var coords in info['zone']) {
+        zone.add(LatLng(coords['lat'], coords['lng']));
+      }
+
       var location = new LocationInfo(
           id: locationId,
           name: info['name'],
           description: info['description'],
           coverImagePath: dir + info['cover']['src'],
           audioPath: dir + info['audio'],
-          lastVisit: await getLastVisit(locationId));
+          lastVisit: await getLastVisit(locationId),
+          zone: zone);
 
       assert(cachedLocations.map((e) => e.id).contains(location.id) == false,
           "ERROR: Location id '${location.id}' is not unique");
