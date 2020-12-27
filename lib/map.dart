@@ -4,6 +4,7 @@ import 'package:latlong/latlong.dart';
 import 'location_overview.dart';
 import 'persistence.dart';
 import 'settings.dart';
+import 'geometry.dart';
 
 class MapPage extends StatefulWidget {
   State<MapPage> createState() => MapPageState();
@@ -40,7 +41,7 @@ class MapPageState extends State<MapPage> {
     _locationUpdate(latlng);
   }
 
-  void _locationUpdate(LatLng latlng) {
+  void _locationUpdate(LatLng pos) {
     /*
     var modifiedInfo = info.copyWith(lastVisit: DateTime.now());
     LocationInfoDB.updateLastVisit(modifiedInfo);
@@ -54,7 +55,16 @@ class MapPageState extends State<MapPage> {
     setState(() {});
     */
 
-    print("Now at location ${latlng.latitude} ${latlng.longitude}");
+    print("Now at location ${pos.latitude} ${pos.longitude}");
+
+    // check for polygon intersections
+    for (LocationInfo info in _locationInfo) {
+      int idx = _locationInfo.indexOf(info);
+
+      if (pointInPolygon(_zonePolygons[idx], pos)) {
+        print("Now in region ${info.name}");
+      }
+    }
   }
 
   @override
