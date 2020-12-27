@@ -74,6 +74,7 @@ class MapPageState extends State<MapPage> {
 
     if (!areaEntered) {
       dequeueAudio();
+      cancelNotification(0);
     }
   }
 

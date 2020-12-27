@@ -38,6 +38,7 @@ void queueAudio(LocationInfo info) async {
         _player.resumePlayer();
       }
     },
+    whenFinished: () {},
   ).then((v) {
     _player.pausePlayer();
   });
