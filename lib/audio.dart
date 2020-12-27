@@ -1,45 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'dart:typed_data';
+import 'persistence.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class PlayButton extends StatefulWidget {
-  final String audioPath;
-  final String name;
+FlutterSoundPlayer _player;
+bool _audioInitialized = false;
 
-  const PlayButton(this.name, this.audioPath);
-  State<PlayButton> createState() => PlayButtonState(name, audioPath);
+void initAudio() async {
+  _player = FlutterSoundPlayer();
+  _player.openAudioSession(withUI: true).then((v) {
+    _audioInitialized = true;
+  });
+}
+
+Future<Track> createTrack(LocationInfo info) async {
+  return Track(
+      trackTitle: info.name,
+      dataBuffer: Uint8List.sublistView(await rootBundle.load(info.audioPath)),
+      codec: Codec.mp3);
+}
+
+/* Create the track and start playing it, but immediately pause it. Then the
+ * user can request playback by pressing a button on the bluetooth device
+ */
+void queueAudio(LocationInfo info) async {
+  Track t = await createTrack(info);
+
+  _player.startPlayerFromTrack(
+    t,
+    onSkipForward: null,
+    onSkipBackward: null,
+    onPaused: (bool wasPlaying) {
+      if (wasPlaying) {
+        _player.pausePlayer();
+      } else {
+        _player.resumePlayer();
+      }
+    },
+  ).then((v) {
+    _player.pausePlayer();
+  });
+}
+
+/* Dequeue the audio if the user has left the zone */
+void dequeueAudio() {
+  if (_player.isPaused) _player.stopPlayer();
+}
+
+class PlayButton extends StatefulWidget {
+  final LocationInfo info;
+
+  const PlayButton(this.info);
+  State<PlayButton> createState() => PlayButtonState(info: info);
 }
 
 class PlayButtonState extends State<PlayButton> {
-  bool _audioInitialized = false;
-  FlutterSoundPlayer _player = FlutterSoundPlayer();
-  String audioPath;
-  String name;
-  Track track;
+  final LocationInfo info;
 
-  PlayButtonState(String name, String audioPath) {
-    this.audioPath = audioPath;
-    this.name = name;
-  }
+  PlayButtonState({LocationInfo this.info}) : super();
 
   @override
   void initState() {
     super.initState();
-
-    this.audioPath = audioPath;
-
-    _player.openAudioSession(withUI: true).then((v) {
-      setState(() {
-        _audioInitialized = true;
-      });
-    });
   }
 
   @override
   void dispose() {
-    _player.closeAudioSession();
-    _player = null;
+    _player.stopPlayer();
 
     super.dispose();
   }
@@ -56,31 +84,20 @@ class PlayButtonState extends State<PlayButton> {
     setState(() {});
   }
 
-  Future<Track> createTrack() async {
-    return Track(
-        trackTitle: name,
-        dataBuffer: Uint8List.sublistView(await rootBundle.load(audioPath)),
-        codec: Codec.mp3);
-  }
-
   void play() async {
+    print("Starting track");
     if (!_audioInitialized) return;
 
-    // Create the track if does not exist already
-    if (track == null) {
-      var t = await createTrack();
-      setState(() {
-        track = t;
-      });
-    }
+    var t = await createTrack(info);
 
     print("Starting playback");
-
     await _player.startPlayerFromTrack(
-      track,
+      t,
       onSkipForward: null,
       onSkipBackward: null,
-      whenFinished: updateIcons,
+      whenFinished: () {
+        updateIcons();
+      },
     );
 
     updateIcons();
@@ -93,6 +110,7 @@ class PlayButtonState extends State<PlayButton> {
   }
 
   IconData _getIcon() {
+    if (_player == null) return Icons.play_arrow;
     return _player.isPlaying ? Icons.stop : Icons.play_arrow;
   }
 

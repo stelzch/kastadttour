@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'location_overview.dart';
 import 'persistence.dart';
+import 'audio.dart';
 import 'settings.dart';
 import 'geometry.dart';
 import 'notifications.dart';
@@ -59,13 +60,20 @@ class MapPageState extends State<MapPage> {
     print("Now at location ${pos.latitude} ${pos.longitude}");
 
     // check for polygon intersections
+    bool areaEntered = false;
     for (LocationInfo info in _locationInfo) {
       int idx = _locationInfo.indexOf(info);
 
       if (pointInPolygon(_zonePolygons[idx], pos)) {
         print("Now in region ${info.name}");
         showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}");
+        queueAudio(info);
+        areaEntered = true;
       }
+    }
+
+    if (!areaEntered) {
+      dequeueAudio();
     }
   }
 

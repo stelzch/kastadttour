@@ -145,7 +145,7 @@ class LocationPage extends StatelessWidget {
                 ],
               )),
         ])),
-        floatingActionButton: PlayButton(info.name, info.audioPath));
+        floatingActionButton: PlayButton(info));
 //        floatingActionButton: FloatingActionButton(
 //            child: Icon(Icons.play_circle_filled), onPressed: () {}));
   }
