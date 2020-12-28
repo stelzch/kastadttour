@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'audio.dart';
 import 'persistence.dart';
+import 'dart:async';
 
 class LocationOverview extends StatefulWidget {
   static const routeName = "/locationOverview";
@@ -9,33 +10,39 @@ class LocationOverview extends StatefulWidget {
 }
 
 class LocationOverviewState extends State<LocationOverview> {
-  List<LocationCard> cards;
-  int numCards = 0;
+  StreamSubscription dbStream;
 
   @override
   void initState() {
-    cards = new List<LocationCard>();
+    super.initState();
 
-    LocationInfoDB.get().listen((locInfo) {
-      setState(() {
-        cards.add(LocationCard(info: locInfo));
-        numCards = cards.length;
-      });
-    });
+    dbStream = LocationInfoDB.updateStream().listen(dbUpdated);
+  }
+
+  void dbUpdated(_) {
+    setState(() {});
   }
 
   Widget _getNthChildCard(BuildContext ctx, int i) {
-    return cards[i];
+    assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
+    return LocationCard(info: LocationInfoDB.cachedLocations[i]);
   }
 
   @override
   Widget build(BuildContext ctx) {
+    assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
     return Scaffold(
         appBar: AppBar(title: Text("Overview")),
         body: ListView.builder(
             itemBuilder: _getNthChildCard,
-            itemCount: numCards,
+            itemCount: LocationInfoDB.cachedLocations.length,
             padding: const EdgeInsets.only(left: 25, right: 25)));
+  }
+
+  @override
+  void dispose() {
+    dbStream?.cancel();
+    super.dispose();
   }
 }
 
@@ -44,7 +51,7 @@ enum LocationCardAction { markUnvisited }
 class LocationCard extends StatefulWidget {
   final LocationInfo info;
 
-  LocationCard({Key key, LocationInfo this.info}) : super(key: key);
+  LocationCard({Key key, this.info}) : super(key: key);
 
   State<LocationCard> createState() => LocationCardState();
 }

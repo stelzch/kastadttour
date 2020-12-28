@@ -10,19 +10,19 @@ import 'package:latlong/latlong.dart';
    Source:
    https://github.com/Sacchid/poly/blob/d3e5414d01ec28edb05f20a8cc1afbb8fce4dec7/lib/poly.dart#L296-L320
 */
-bool pointInPolygon(Polygon polygon, LatLng point) {
+bool pointInPolygon(List<LatLng> polygon, LatLng point) {
   /* Copyright (c) 2016, Bernhard Pichler Copyright (c) 2019, Sacchid */
   num ax = 0;
   num ay = 0;
-  num bx = polygon.points.last.latitude - point.latitude;
-  num by = polygon.points.last.longitude - point.longitude;
+  num bx = polygon.last.latitude - point.latitude;
+  num by = polygon.last.longitude - point.longitude;
   int depth = 0;
 
-  for (int i = 0; i < polygon.points.length; i++) {
+  for (int i = 0; i < polygon.length; i++) {
     ax = bx;
     ay = by;
-    bx = polygon.points[i].latitude - point.latitude;
-    by = polygon.points[i].longitude - point.longitude;
+    bx = polygon[i].latitude - point.latitude;
+    by = polygon[i].longitude - point.longitude;
 
     if (ay < 0 && by < 0) continue; // both "up" or both "down"
     if (ay > 0 && by > 0) continue; // both "up" or both "down"

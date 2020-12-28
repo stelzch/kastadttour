@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -16,27 +17,31 @@ class MapPageState extends State<MapPage> {
   MapController _mapController;
   final LatLng swMapCorner = LatLng(48.9906, 8.3657);
   final LatLng neMapCorner = LatLng(49.0257, 8.4358);
-  List<LocationInfo> _locationInfo;
-  List<Polygon> _zonePolygons;
+  StreamSubscription dbSub;
 
   @override
   void initState() {
     super.initState();
 
     _mapController = MapController();
-    _locationInfo = List<LocationInfo>();
-    _zonePolygons = List<Polygon>();
+    dbSub = LocationInfoDB.updateStream().listen(dbUpdated);
+  }
 
-    LocationInfoDB.get().listen((location) {
-      _locationInfo.add(location);
+  void dbUpdated(_) {
+    setState(() {});
+  }
 
-      _zonePolygons.add(Polygon(
-        points: location.zone,
-        color: Color.fromARGB(100, 50, 50, 255),
-        borderColor: Color.fromARGB(255, 0, 0, 100),
-        borderStrokeWidth: 1.0,
-      ));
-    });
+  List<Polygon> getPolygons() {
+    assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
+    return LocationInfoDB.cachedLocations
+        .where((i) => i.lastVisit == null)
+        .map((i) => Polygon(
+              points: i.zone,
+              color: Color.fromARGB(100, 50, 50, 255),
+              borderColor: Color.fromARGB(255, 0, 0, 100),
+              borderStrokeWidth: 1.0,
+            ))
+        .toList();
   }
 
   void _handleMapTap(LatLng latlng) {
@@ -44,31 +49,28 @@ class MapPageState extends State<MapPage> {
   }
 
   void _locationUpdate(LatLng pos) {
-    /*
-    var modifiedInfo = info.copyWith(lastVisit: DateTime.now());
-    LocationInfoDB.updateLastVisit(modifiedInfo);
-
-    setState(() {
-      info = modifiedInfo;
-    });
-    if (action == LocationCardAction.markVisited) {
-    } else {}
-
-    setState(() {});
-    */
-
     print("Now at location ${pos.latitude} ${pos.longitude}");
 
     // check for polygon intersections
     bool areaEntered = false;
-    for (LocationInfo info in _locationInfo) {
-      int idx = _locationInfo.indexOf(info);
+    assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
+    for (LocationInfo info in LocationInfoDB.cachedLocations) {
+      // If the place is already visited, we do not need to consider it for
+      // collision
+      if (info.lastVisit != null) continue;
 
-      if (pointInPolygon(_zonePolygons[idx], pos)) {
-        print("Now in region ${info.name}");
-        showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}");
+      if (pointInPolygon(info.zone, pos)) {
+        showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}",
+            id: 0);
         queueAudio(info);
         areaEntered = true;
+
+        // Mark the area as visited
+        LocationInfo modified = info.copyWith(lastVisit: DateTime.now());
+        LocationInfoDB.updateLastVisit(modified).then((v) {
+          print("Finished DB UPdate");
+          setState(() {}); // Needed so the polygon vanishes from the map
+        });
       }
     }
 
@@ -137,7 +139,7 @@ class MapPageState extends State<MapPage> {
                 retinaMode: true,
               ),
               PolygonLayerOptions(
-                polygons: _zonePolygons,
+                polygons: getPolygons(),
                 polygonCulling: false,
               ),
             ],
@@ -145,5 +147,12 @@ class MapPageState extends State<MapPage> {
         ]),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.my_location), onPressed: () {}));
+  }
+
+  @override
+  void dispose() {
+    dbSub?.cancel();
+
+    super.dispose();
   }
 }

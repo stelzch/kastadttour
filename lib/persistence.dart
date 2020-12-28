@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:latlong/latlong.dart';
+import 'dart:async';
 
 class LocationInfo {
   final String id;
@@ -59,12 +60,13 @@ class LocationInfoDB {
 
   static Database db;
   static Lock dbCreationLock = new Lock();
+  static StreamController<LocationInfo> _streamController =
+      StreamController<LocationInfo>();
+  static Stream<LocationInfo> _broadcastStream =
+      _streamController.stream.asBroadcastStream();
 
-  static Stream<LocationInfo> get() async* {
-    if (allCached) {
-      for (var x in cachedLocations) yield x;
-      return;
-    }
+  /* Fill up the cache initially */
+  static Future init() async {
     await initDatabase();
 
     String index = await rootBundle.loadString('assets/locations/list.yml');
@@ -92,7 +94,6 @@ class LocationInfoDB {
           "ERROR: Location id '${location.id}' is not unique");
 
       cachedLocations.add(location);
-      yield location;
     }
 
     allCached = true;
@@ -114,7 +115,7 @@ class LocationInfoDB {
     });
   }
 
-  static void updateLastVisit(LocationInfo info) async {
+  static Future updateLastVisit(LocationInfo info) async {
     await initDatabase();
 
     int rowsUpdated = await db.update(
@@ -129,7 +130,7 @@ class LocationInfoDB {
 
     if (rowsUpdated == 0) {
       // The location was not present yet in the database
-      int rowsInserted = await db.insert(
+      await db.insert(
         'lastVisit',
         {
           'locationName': info.id,
@@ -137,10 +138,8 @@ class LocationInfoDB {
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-
-      assert(rowsInserted == 1);
     }
-    print("VIsit updated, ${rowsUpdated}");
+    print("Visit updated, $rowsUpdated");
 
     int idx = cachedLocations.indexWhere((e) => e.id == info.id);
 
@@ -148,6 +147,7 @@ class LocationInfoDB {
     if (idx == -1) return;
 
     cachedLocations[idx] = info;
+    notifyObservers(cachedLocations[idx]);
   }
 
   static Future<DateTime> getLastVisit(String locationId) async {
@@ -176,5 +176,15 @@ class LocationInfoDB {
     if (idx == -1) return;
 
     cachedLocations[idx] = info.copyWithoutVisit();
+    notifyObservers(cachedLocations[idx]);
+  }
+
+  static notifyObservers(LocationInfo changed) {
+    if (_streamController.hasListener && !_streamController.isPaused)
+      _streamController.add(changed);
+  }
+
+  static Stream<LocationInfo> updateStream() {
+    return _broadcastStream;
   }
 }

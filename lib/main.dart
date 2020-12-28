@@ -11,11 +11,12 @@ import 'audio.dart';
 
 FlutterLocalNotificationsPlugin notifications;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initNotifications();
   initAudio();
+  await LocationInfoDB.init();
 
   runApp(MyApp());
 }
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'KA Stadtführer',
         theme: ThemeData(
           // This is the theme of your application.
           //
