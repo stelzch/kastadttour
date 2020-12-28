@@ -131,6 +131,31 @@ class LocationCardState extends State<LocationCard> {
 
 class LocationPage extends StatelessWidget {
   static const routeName = "/locationPage";
+
+  String datetimeToString(DateTime t) {
+    int secondsElapsed =
+        ((DateTime.now().millisecondsSinceEpoch - t.millisecondsSinceEpoch) /
+                1000)
+            .round();
+    assert(secondsElapsed >= 0); // No futures handled here
+
+    if (secondsElapsed <= 0) {
+      return "bald";
+    } else if (secondsElapsed == 0) {
+      return "jetzt";
+    } else if (secondsElapsed <= 60) {
+      return "vor ${secondsElapsed}s";
+    } else if (secondsElapsed <= 60 * 60) {
+      int minutesElapsed = (secondsElapsed / 60).round();
+      return "vor ${minutesElapsed}min";
+    } else if (secondsElapsed <= 60 * 60 * 24) {
+      int hoursElapsed = (secondsElapsed / 60 / 60).round();
+      return "vor ${hoursElapsed}h";
+    } else {
+      return t.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext ctx) {
     var textTheme = Theme.of(ctx).textTheme;
@@ -149,6 +174,9 @@ class LocationPage extends StatelessWidget {
                   Padding(
                       child: Text(info.description, style: textTheme.bodyText2),
                       padding: EdgeInsets.only(top: 10, bottom: 50)),
+                  Text((info.lastVisit == null)
+                      ? ""
+                      : "Zuletzt besucht: ${datetimeToString(info.lastVisit)}"),
                 ],
               )),
         ])),
