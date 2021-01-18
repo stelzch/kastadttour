@@ -61,8 +61,8 @@ flutter:
     - assets/locations/bundesverfassungsgericht/
     - assets/locations/pyramide/
     - assets/locations/gottesau/
-    - assets/locations/staatstheater
-    - assets/locations/gerwigbrunnen
+    - assets/locations/staatstheater/
+    - assets/locations/gerwigbrunnen/
     - assets/map/
     - assets/map/12/2143/
     - assets/map/13/4286/

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'audio.dart';
 import 'persistence.dart';
 import 'dart:async';
+import 'dart:math';
 
 class LocationOverview extends StatefulWidget {
   static const routeName = "/locationOverview";
@@ -32,7 +33,7 @@ class LocationOverviewState extends State<LocationOverview> {
   Widget build(BuildContext ctx) {
     assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
     return Scaffold(
-        appBar: AppBar(title: Text("Overview")),
+        appBar: AppBar(title: Text("Übersicht")),
         body: ListView.builder(
             itemBuilder: _getNthChildCard,
             itemCount: LocationInfoDB.cachedLocations.length,
@@ -92,19 +93,22 @@ class LocationCardState extends State<LocationCard> {
               padding: EdgeInsets.only(top: 6, left: 8, right: 8, bottom: 0),
               child: Column(children: [
                 Row(children: [
-                  Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Text(
-                          info.name + (info.lastVisit != null ? " ✅" : ""),
-                          style: Theme.of(ctx).textTheme.headline5,
-                          textAlign: TextAlign.left)),
+                  Expanded(
+                      child: Row(children: [
+                    Flexible(
+                        child: Text(info.name,
+                            style: Theme.of(ctx).textTheme.headline5,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left)),
+                    Text((info.lastVisit != null) ? " ✅" : "")
+                  ])),
                   PopupMenuButton<LocationCardAction>(
                     onSelected: cardAction,
                     itemBuilder: (BuildContext ctx) =>
                         <PopupMenuEntry<LocationCardAction>>[
                       const PopupMenuItem<LocationCardAction>(
                         value: LocationCardAction.markUnvisited,
-                        child: Text("Mark unvisited"),
+                        child: Text("Markiere als unbesucht"),
                       )
                     ],
                   ),
@@ -168,20 +172,19 @@ class LocationPage extends StatelessWidget {
           Image(image: AssetImage(info.coverImagePath), fit: BoxFit.cover),
           Padding(
               padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(children: [Text(info.name, style: textTheme.headline4)]),
-                  Padding(
-                      child: Text(info.description, style: textTheme.bodyText2),
-                      padding: EdgeInsets.only(top: 10, bottom: 50)),
-                  Text((info.lastVisit == null)
-                      ? ""
-                      : "Zuletzt besucht: ${datetimeToString(info.lastVisit)}"),
-                ],
-              )),
+              child: Column(children: [
+                Text(info.name,
+                    style: textTheme.headline4,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1),
+                Padding(
+                    child: Text(info.description, style: textTheme.bodyText2),
+                    padding: EdgeInsets.only(top: 10, bottom: 50)),
+                Text((info.lastVisit == null)
+                    ? ""
+                    : "Zuletzt besucht: ${datetimeToString(info.lastVisit)}"),
+              ], crossAxisAlignment: CrossAxisAlignment.start)),
         ])),
         floatingActionButton: PlayButton(info));
-//        floatingActionButton: FloatingActionButton(
-//            child: Icon(Icons.play_circle_filled), onPressed: () {}));
   }
 }

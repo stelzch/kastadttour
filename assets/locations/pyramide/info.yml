@@ -5,9 +5,9 @@ cover:
 audio: audio.mp3
 zone:
   - {lat: 49.009301, lng: 8.403797}
-  - {lat: 49.009155  lng: 8.403804}
-  - {lat: 49.009153  lng: 8.404046}
-  - {lat: 49.009304  lng: 8.404039}
+  - {lat: 49.009155, lng: 8.403804}
+  - {lat: 49.009153, lng: 8.404046}
+  - {lat: 49.009304, lng: 8.404039}
 description: >
   Hier auf dem Marktplatz befindet sich eine etwas eigentümliche
   Sehenswürdigkeit Karlsruhe's: die Pyramide. Dieses fast 7 Meter hohe Bauwerk
