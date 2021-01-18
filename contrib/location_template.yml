@@ -1,0 +1,13 @@
+name: Name des Standorts
+cover:
+  src: Dateiname des Titelbilds
+  attribution: Information über den Eigentümer des Bildes
+zone: # Liste von Koordinaten die den Standort eingrenzen
+  - {lat: 49.00982320528119, lng: 8.412280389399053}
+audio: info.mp3 # Name der Audiodatei
+description: > # Textbeschreibung/Transkription der Audio
+  Text
+
+  Paragraph durch Leerzeile getrennt.
+
+
