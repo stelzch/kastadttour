@@ -1,0 +1,21 @@
+name: Schloss Gottesau
+cover:
+  src: cover.jpg
+  attribution: User:Ikar.us von https://commons.wikimedia.org/wiki/File:Karlsruhe_Gottesaue3.jpg
+audio: audio.mp3
+zone:
+  - {lat: 49.005044, lng: 8.426684}
+  - {lat: 49.004119, lng: 8.426679}
+  - {lat: 49.004116, lng: 8.427483}
+  - {lat: 49.005053, lng: 8.427470}
+description: >
+  Umgeben von den Grünflächen des Otto-Dullenkopf-Parks steht hier in der
+  Oststadt ein weiteres Schloss Karlsruhes: Schloss Gottesau. Es entstand zuerst
+  1588 auf dem Gebiet eines ehemaligen Klosters, wurde im Laufe der Geschichte
+  jedoch mehrmals zerstört und wieder aufgebaut. Die heutige Erscheinung des
+  Schlosses entstand durch die Rekonstruktion 1982-1989, wobei die äußere
+  Gestalt dem ursprünglichen Bauwerk sehr nahe kommt.
+
+  Heute wird es von der Hochschule für Musik genutzt.
+
+

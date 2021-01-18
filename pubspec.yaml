@@ -58,6 +58,9 @@ flutter:
     - assets/locations/schloss/
     - assets/locations/hebeldenkmal/
     - assets/locations/ehrenhof/
+    - assets/locations/bundesverfassungsgericht/
+    - assets/locations/pyramide/
+    - assets/locations/gottesau/
     - assets/map/
     - assets/map/12/2143/
     - assets/map/13/4286/
