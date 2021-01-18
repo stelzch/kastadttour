@@ -97,6 +97,7 @@ class PlayButtonState extends State<PlayButton> {
       onSkipForward: null,
       onSkipBackward: null,
       whenFinished: () {
+        _player.stopPlayer();
         updateIcons();
       },
     );

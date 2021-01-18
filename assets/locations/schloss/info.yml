@@ -2,7 +2,7 @@ name: Schloss
 cover:
   src: cover.jpg
   attribution: pixabay.com
-audio: info.mp3
+audio: audio.mp3
 zone:
   - {lat: 49.013477264641395, lng: 8.404033897183842}
   - {lat: 49.01310111187271,  lng: 8.403475997708744}

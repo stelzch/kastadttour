@@ -2,7 +2,7 @@ name: Hebeldenkmal
 cover:
   src: hebeldenkmal.jpg
   attribution: https://commons.wikimedia.org/wiki/User:Hozro
-audio: info.mp3
+audio: audio.mp3
 zone:
   - {lat: 49.01456476516256, lng: 8.40322240703824}
   - {lat: 49.014134885443006, lng: 8.402840070335024}
@@ -11,13 +11,12 @@ description: >
   Dieses Denkmal ist dem deutschen Schriftsteller Johann Peter Hebel gewidmet.
   Er wurde 1760 in Basel geboren und wuchs im Wiesental südlich des Feldbergs im
   Schwarzwald auf. Er war zuerst Schüler, später auch Direktor, des heutigen
-  Bismarck-Gymnasium hier in Karlsruhe.
+  Bismarck-Gymnasium hier in Karlsruhe, der damaligen Residenzstadt.
 
   Als Prälat der protestantischer Landeskirche war er Mitglied der Badischen
   Ständeversammlung, dem damaligen Parlament von Baden. Zu seinen bekanntesten
-  Schriften gehören die Allemannischen Gedichte, in denen er seine
-  ländlich-südbadische Heimat auf poetische Weise portraitiert. Johann Wolfgang
-  von Goethe
+  Schriften gehören die Alemannischen Gedichte, in denen er seine
+  ländlich-südbadische Heimat auf poetische Weise portraitiert.
 
   In einem Brief schreibt Hebel selbst: „Ich kann in gewißen Momenten inwendig
   in mir unbändig stolz werden, und mich bis zur Trunkenheit glücklich fühlen,
