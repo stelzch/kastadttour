@@ -1,0 +1,26 @@
+name: Gerwigbrunnen
+cover:
+  src: cover.jpg
+  attribution: User:Andreas Schwarzkopf von https://commons.wikimedia.org/wiki/File:Gerwigbrunnen_in_der_Karlsruher_Gerwigstra%C3%9Fe.jpg
+audio: audio.mp3
+zone:
+  - {lat: 49.008373, lng: 8.430430}
+  - {lat: 49.008320  lng: 8.430721}
+  - {lat: 49.008438  lng: 8.430763}
+  - {lat: 49.008500  lng: 8.430493}
+description: >
+  Dieser Brunnen ist dem badischen Bauningenieur Robert Gerwig gewidmet. Er
+  wurde 1820 in Karlsruhe geboren und ist Absolvent der Polytechnischen Schule,
+  dem heutigen KIT.
+
+  Er war der erste Direktor der Uhrmacherschule Furtwangen, und half die
+  Schwarzwälder Kuckucksuhr zu verbreiten, indem er einen Wettbewerb für einen
+  neuen Entwurf des Uhrgehäuses veranstaltete.
+
+  In der Oberdirektion für Wasser- und Straßenbau beschäftigte er sich mit der
+  Planung der Schwarzwaldbahn Offenburg-Singen und der Höllentalbahn, die
+  zwischen Freiburg und Neustadt verkehrt. Hierfür setzte er als erster
+  sogenannte Kehrtunnel ein, die die Bahnstrecke künstlich verlängern, um mit
+  der starken Steigung fertig zu werden.
+
+
