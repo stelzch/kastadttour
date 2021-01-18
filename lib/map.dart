@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'location_overview.dart';
 import 'persistence.dart';
 import 'audio.dart';
@@ -18,6 +19,7 @@ class MapPageState extends State<MapPage> {
   final LatLng swMapCorner = LatLng(48.9906, 8.3657);
   final LatLng neMapCorner = LatLng(49.0257, 8.4358);
   StreamSubscription dbSub;
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -25,6 +27,11 @@ class MapPageState extends State<MapPage> {
 
     _mapController = MapController();
     dbSub = LocationInfoDB.updateStream().listen(dbUpdated);
+    SharedPreferences.getInstance().then((v) {
+      setState(() {
+        prefs = v;
+      });
+    });
   }
 
   void dbUpdated(_) {
@@ -45,7 +52,9 @@ class MapPageState extends State<MapPage> {
   }
 
   void _handleMapTap(LatLng latlng) {
-    _locationUpdate(latlng);
+    if (prefs.getBool(CONFIG_TAP_TO_SET_GPS)) {
+      _locationUpdate(latlng);
+    }
   }
 
   void _locationUpdate(LatLng pos) {

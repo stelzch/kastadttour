@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 const String CONFIG_ESENSE_NAME = "esenseName";
+const String CONFIG_TAP_TO_SET_GPS = "tapToGPS";
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/settings";
@@ -18,15 +19,21 @@ class SettingsState extends State<SettingsPage> {
   bool esenseSelected = false;
   FlutterBlue flutterBlue = FlutterBlue.instance;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool tapToSetGPS = true;
+  SharedPreferences prefs;
 
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
+      this.prefs = prefs;
       var v = prefs.getString(CONFIG_ESENSE_NAME);
-      if (v == null) return;
+
       setState(() {
-        esenseName = v;
-        esenseSelected = true;
+        if (v != null) {
+          esenseName = v;
+          esenseSelected = true;
+        }
+        tapToSetGPS = prefs.getBool(CONFIG_TAP_TO_SET_GPS) ?? false;
 
         ESenseManager.connect(esenseName);
       });
@@ -84,22 +91,37 @@ class SettingsState extends State<SettingsPage> {
         appBar: AppBar(
           title: Text("Einstellungen"),
         ),
-        body: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            Text("eSense"),
-            ElevatedButton(
-              child: Text(esenseName),
-              onPressed: () {
-                selectEsense(ctx);
-              },
-            ),
-            ElevatedButton(
-                child: Icon(Icons.info),
-                onPressed: () {
-                  getEsenseInfo(ctx);
-                }),
-          ]),
-        ]));
+        body: Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Column(children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Text("eSense"),
+                ElevatedButton(
+                  child: Text(esenseName),
+                  onPressed: () {
+                    selectEsense(ctx);
+                  },
+                ),
+                ElevatedButton(
+                    child: Icon(Icons.info),
+                    onPressed: () {
+                      getEsenseInfo(ctx);
+                    }),
+              ]),
+              Row(children: [
+                Text("Tippen um Standort zu bewegen"),
+                Checkbox(
+                    value: tapToSetGPS,
+                    onChanged: (value) {
+                      SharedPreferences.getInstance().then((prefs) {
+                        prefs.setBool(CONFIG_TAP_TO_SET_GPS, value);
+                        setState(() {
+                          tapToSetGPS = value;
+                        });
+                      });
+                    })
+              ]),
+            ])));
   }
 }
 
