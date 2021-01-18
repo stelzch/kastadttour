@@ -4,10 +4,10 @@ cover:
   attribution: pixabay.com
 audio: audio.mp3
 zone:
-  - {lat: 49.013477264641395, lng: 8.404033897183842}
-  - {lat: 49.01310111187271,  lng: 8.403475997708744}
-  - {lat: 49.013088317510885, lng: 8.405340864485666}
-  - {lat: 49.01341841099439,  lng: 8.404732246876476}
+  - {lat: 49.013545, lng: 8.403983}
+  - {lat: 49.012680, lng: 8.402570}
+  - {lat: 49.012529, lng: 8.405971}
+  - {lat: 49.013498, lng: 8.404785}
 description: >
   1715 ließ Markgraf Karl Wilhelm ein Schloss unweit seiner Residenzstadt
   Durlach errichten, inmitten des Hardtwaldes.  32 Alleen sollten strahlförmig

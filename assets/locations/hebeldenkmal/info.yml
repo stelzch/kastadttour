@@ -4,9 +4,13 @@ cover:
   attribution: https://commons.wikimedia.org/wiki/User:Hozro
 audio: audio.mp3
 zone:
-  - {lat: 49.01456476516256, lng: 8.40322240703824}
-  - {lat: 49.014134885443006, lng: 8.402840070335024}
-  - {lat: 49.014165591260365, lng: 8.403495504683379}
+  - {lat: 49.014377, lng: 8.403117}
+  - {lat: 49.014312, lng: 8.403148}
+  - {lat: 49.014312, lng: 8.403218}
+  - {lat: 49.014338, lng: 8.40325}
+  - {lat: 49.014378, lng: 8.403255}
+  - {lat: 49.014408, lng: 8.403222}
+  - {lat: 49.014409, lng: 8.403147}
 description: >
   Dieses Denkmal ist dem deutschen Schriftsteller Johann Peter Hebel gewidmet.
   Er wurde 1760 in Basel geboren und wuchs im Wiesental südlich des Feldbergs im

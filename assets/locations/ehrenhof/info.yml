@@ -3,10 +3,10 @@ cover:
   src: ehrenhof.jpg
   attribution: https://commons.wikimedia.org/wiki/User:GjR
 zone:
-  - {lat: 49.00982320528119, lng: 8.412280389399053}
-  - {lat: 49.009539150973239, lng: 8.41228429079398}
-  - {lat: 49.009539150973239, lng: 8.412639317732669}
-  - {lat: 49.009859031835559, lng: 8.41265102191745}
+  - {lat: 49.009881, lng: 8.412195}
+  - {lat: 49.009497, lng: 8.412199}
+  - {lat: 49.009495, lng: 8.412672}
+  - {lat: 49.009881, lng: 8.412671}
 audio: audio.mp3
 description: >
   Der sogenannte Ehrenhof befindet sich mitten im Zentrum des damaligen
