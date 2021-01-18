@@ -1,7 +1,7 @@
 ![KA Stadtführer](./contrib/banner.svg)
 
 
-Dieses Projekt ist eine Art Audioguide durch Karlsruhe. Es ist im Rahmen der Vorlesung „Mobile Computing and Internet of Things“ des [TECO](https://www.teco.edu/) entstanden.
+Dieses Projekt ist eine Art GPS-gestützter Audioguide durch Karlsruhe. Es ist im Rahmen der Vorlesung „Mobile Computing and Internet of Things“ des [TECO](https://www.teco.edu/) entstanden.
 
 ## Screenshots
 
@@ -42,4 +42,7 @@ description: >
 
 ```
 
-Zusätzlich muss in `pubspec.yaml` unter flutter/assets der `assets/locations/deinelocation/` Ordner aufgeführt werden und die Liste in `assets/locations/list.yml` ergänzt werden. Siehe z.B. auch Commit 2f69e3d9f24d098304e24aac387c004cea9c61a9 als Referenz.
+Hier ist zone ein Liste von Koordinaten die ein Polygon aufspannen, dass den Ort umgrenzt. Dies ist notwendig, um die Audiodatei korrekt wiederzugeben wenn sich der Nutzer in dem Bereich befindet.
+
+
+Zusätzlich muss in `pubspec.yaml` unter flutter/assets der `assets/locations/deinelocation/` Ordner aufgeführt werden und die Liste in `assets/locations/list.yml` ergänzt werden. Siehe z.B. auch [diesen Commit](https://github.com/stelzch/kastadttour/commit/2f69e3d9f24d098304e24aac387c004cea9c61a9) als Referenz.
