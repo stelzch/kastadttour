@@ -39,6 +39,11 @@ void queueAudio(LocationInfo info) async {
       }
     },
     whenFinished: () {
+      // Mark the area as visited
+      LocationInfo modified = info.copyWith(lastVisit: DateTime.now());
+      LocationInfoDB.updateLastVisit(modified).then((v) {
+        print("Finished DB UPdate");
+      });
       _player.stopPlayer();
     },
   ).then((v) {

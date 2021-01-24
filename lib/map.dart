@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 import 'location_overview.dart';
 import 'persistence.dart';
 import 'audio.dart';
@@ -16,10 +17,24 @@ class MapPage extends StatefulWidget {
 
 class MapPageState extends State<MapPage> {
   MapController _mapController;
-  final LatLng swMapCorner = LatLng(48.9906, 8.3657);
-  final LatLng neMapCorner = LatLng(49.0257, 8.4358);
+  static final LatLng swMapCorner = LatLng(48.9906, 8.3657);
+  static final LatLng neMapCorner = LatLng(49.0257, 8.4358);
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng _lastPos = LatLng(swMapCorner.latitude, swMapCorner.longitude);
   StreamSubscription dbSub;
+  StreamSubscription gpsSub;
   SharedPreferences prefs;
+
+  void showError(String msg) {
+    final errorSnackBar = SnackBar(
+        content: Row(children: [
+      Padding(
+          child: Icon(Icons.error, color: Colors.white),
+          padding: const EdgeInsets.only(right: 15)),
+      Text(msg),
+    ]));
+    _scaffoldKey.currentState.showSnackBar(errorSnackBar);
+  }
 
   @override
   void initState() {
@@ -32,6 +47,33 @@ class MapPageState extends State<MapPage> {
         prefs = v;
       });
     });
+
+    Geolocator.isLocationServiceEnabled().then((serviceEnabled) async {
+      if (!serviceEnabled) {
+        showError("Bitte GPS aktivieren");
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever) {
+        showError("Bitte Standortzugriff erlauben");
+      } else if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          showError("Bitte Standortzugriff erlauben");
+        }
+      }
+    });
+
+    setState(() {
+      gpsSub = Geolocator.getPositionStream().listen(_gpsLocation);
+    });
+  }
+
+  void _gpsLocation(Position pos) {
+    var latlng = LatLng(pos.latitude, pos.longitude);
+    _locationUpdate(latlng);
   }
 
   void dbUpdated(_) {
@@ -62,31 +104,31 @@ class MapPageState extends State<MapPage> {
 
     // check for polygon intersections
     bool areaEntered = false;
+    bool inAreaBefore = false;
     assert(LocationInfoDB.allCached, "LocationInfoDB not loaded properly");
     for (LocationInfo info in LocationInfoDB.cachedLocations) {
       // If the place is already visited, we do not need to consider it for
       // collision
       if (info.lastVisit != null) continue;
 
-      if (pointInPolygon(info.zone, pos)) {
+      inAreaBefore |= pointInPolygon(info.zone, _lastPos);
+
+      if (pointInPolygon(info.zone, pos) && !inAreaBefore) {
         showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}",
             id: 0);
         queueAudio(info);
         areaEntered = true;
-
-        // Mark the area as visited
-        LocationInfo modified = info.copyWith(lastVisit: DateTime.now());
-        LocationInfoDB.updateLastVisit(modified).then((v) {
-          print("Finished DB UPdate");
-          setState(() {}); // Needed so the polygon vanishes from the map
-        });
       }
     }
 
-    if (!areaEntered) {
+    if (!areaEntered && !inAreaBefore) {
       dequeueAudio();
       cancelNotification(0);
     }
+
+    _lastPos.latitude = pos.latitude;
+    _lastPos.longitude = pos.longitude;
+    setState(() {});
   }
 
   @override
@@ -151,6 +193,15 @@ class MapPageState extends State<MapPage> {
                 polygons: getPolygons(),
                 polygonCulling: false,
               ),
+              MarkerLayerOptions(markers: [
+                Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: _lastPos,
+                    builder: (ctx) => Container(
+                          child: Icon(Icons.adjust),
+                        ))
+              ]),
             ],
           ))
         ]),
@@ -161,6 +212,7 @@ class MapPageState extends State<MapPage> {
   @override
   void dispose() {
     dbSub?.cancel();
+    gpsSub?.cancel();
 
     super.dispose();
   }
