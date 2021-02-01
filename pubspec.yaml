@@ -39,6 +39,8 @@ dependencies:
   flutter_local_notifications: ^1.4.4+2
   workmanager: ^0.2.3
   geolocator: ^6.1.14
+  background_locator: ^1.4.0
+  location_permissions: ^3.0.0
 
 dev_dependencies:
   flutter_test:

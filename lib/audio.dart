@@ -45,6 +45,7 @@ void queueAudio(LocationInfo info) async {
         print("Finished DB UPdate");
       });
       _player.stopPlayer();
+      print("Done");
     },
   ).then((v) {
     _player.pausePlayer();

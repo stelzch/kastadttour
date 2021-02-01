@@ -8,6 +8,7 @@ import 'package:workmanager/workmanager.dart';
 import 'dart:async';
 import 'notifications.dart';
 import 'audio.dart';
+import 'location.dart';
 
 FlutterLocalNotificationsPlugin notifications;
 
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         ),
         //home: MyHomePage(title: 'Flutter Demo Home Page'),
         home: MapPage(),
+        //home: MLocationPage(),
         routes: {
           LocationPage.routeName: (ctx) => LocationPage(),
           LocationOverview.routeName: (ctx) => LocationOverview(),

@@ -4,7 +4,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:esense_flutter/esense.dart';
 import 'location_overview.dart';
+import 'location.dart';
 import 'persistence.dart';
 import 'audio.dart';
 import 'settings.dart';
@@ -24,6 +26,7 @@ class MapPageState extends State<MapPage> {
   StreamSubscription dbSub;
   StreamSubscription gpsSub;
   SharedPreferences prefs;
+  StreamSubscription esenseSub;
 
   void showError(String msg) {
     final errorSnackBar = SnackBar(
@@ -48,32 +51,32 @@ class MapPageState extends State<MapPage> {
       });
     });
 
-    Geolocator.isLocationServiceEnabled().then((serviceEnabled) async {
-      if (!serviceEnabled) {
-        showError("Bitte GPS aktivieren");
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.deniedForever) {
-        showError("Bitte Standortzugriff erlauben");
-      } else if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-
-        if (permission != LocationPermission.whileInUse &&
-            permission != LocationPermission.always) {
-          showError("Bitte Standortzugriff erlauben");
-        }
-      }
-    });
+    BackgroundLocation.start();
 
     setState(() {
-      gpsSub = Geolocator.getPositionStream().listen(_gpsLocation);
+      gpsSub = BackgroundLocation.getStream().listen(_locationUpdate);
+    });
+
+    SharedPreferences.getInstance().then((prefs) {
+      this.prefs = prefs;
+      var esenseName = prefs.getString(CONFIG_ESENSE_NAME);
+      if (esenseName == null) return;
+
+      ESenseManager.connect(esenseName).then((ret) {
+        if (!ret || ESenseManager.connected) {
+          showError("ESense nicht verbunden");
+          return;
+        }
+
+        setState(() {
+          esenseSub = ESenseManager.sensorEvents.listen(esenseUpdate);
+        });
+      });
     });
   }
 
-  void _gpsLocation(Position pos) {
-    var latlng = LatLng(pos.latitude, pos.longitude);
-    _locationUpdate(latlng);
+  void esenseUpdate(e) {
+    print("ESENSE: $e");
   }
 
   void dbUpdated(_) {
@@ -122,7 +125,7 @@ class MapPageState extends State<MapPage> {
     }
 
     if (!areaEntered && !inAreaBefore) {
-      dequeueAudio();
+      //dequeueAudio();
       cancelNotification(0);
     }
 
@@ -213,6 +216,9 @@ class MapPageState extends State<MapPage> {
   void dispose() {
     dbSub?.cancel();
     gpsSub?.cancel();
+    esenseSub?.cancel();
+
+    BackgroundLocation.stop();
 
     super.dispose();
   }

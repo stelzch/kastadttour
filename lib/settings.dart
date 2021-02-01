@@ -132,10 +132,11 @@ class BlueDeviceSelector extends StatefulWidget {
 
 class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
   List<Widget> blueDevices;
+  List<String> blueDeviceMACs;
   bool devicesAdded = false;
   StreamSubscription subscription;
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  final SCAN_DURATION = Duration(seconds: 5);
+  final SCAN_DURATION = Duration(seconds: 15);
   final MAC_PREFIX = "00:04:79:";
   Timer scanTimer;
 
@@ -144,17 +145,19 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
     super.initState();
 
     blueDevices = List<Widget>();
-    flutterBlue.startScan(timeout: SCAN_DURATION);
+    blueDeviceMACs = List<String>();
     subscription = flutterBlue.scanResults.listen((results) {
       for (ScanResult r in results) {
         setState(() {
+          if (!r.device.id.toString().startsWith(MAC_PREFIX)) return;
+
+          if (blueDeviceMACs.contains(r.device.id.toString())) return;
+
           if (!devicesAdded) {
-            blueDevices.clear();
+            blueDevices.clear(); // Remove CircularProgressIndicator from list
             devicesAdded = true;
             scanTimer.cancel();
           }
-
-          if (!r.device.id.toString().startsWith(MAC_PREFIX)) return;
 
           blueDevices.add(SimpleDialogOption(
             onPressed: () {
@@ -162,6 +165,8 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
             },
             child: Text(r.device.name),
           ));
+
+          blueDeviceMACs.add(r.device.id.toString());
         });
       }
     });
@@ -175,6 +180,7 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
       });
     });
 
+    flutterBlue.startScan(timeout: SCAN_DURATION, allowDuplicates: false);
     blueDevices.add(Center(child: CircularProgressIndicator()));
   }
 
@@ -188,6 +194,7 @@ class BlueDeviceSelectorState extends State<BlueDeviceSelector> {
   void dispose() {
     super.dispose();
 
+    flutterBlue.stopScan();
     subscription?.cancel();
     scanTimer?.cancel();
   }
