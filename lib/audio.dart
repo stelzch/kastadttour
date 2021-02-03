@@ -52,6 +52,10 @@ void queueAudio(LocationInfo info) async {
   });
 }
 
+void playAudio() {
+  _player.resumePlayer();
+}
+
 /* Dequeue the audio if the user has left the zone */
 void dequeueAudio() {
   if (_player.isPaused) _player.stopPlayer();

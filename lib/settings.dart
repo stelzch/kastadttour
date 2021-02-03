@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import "package:esense_flutter/esense.dart";
+import 'package:esense_flutter/esense.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
+import 'interact.dart';
 
 const String CONFIG_ESENSE_NAME = "esenseName";
 const String CONFIG_TAP_TO_SET_GPS = "tapToGPS";
@@ -121,6 +122,11 @@ class SettingsState extends State<SettingsPage> {
                       });
                     })
               ]),
+              ElevatedButton(
+                  child: Text("ESense reconnect"),
+                  onPressed: () {
+                    ESenseInteract().reconnect();
+                  }),
             ])));
   }
 }

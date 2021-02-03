@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:esense_flutter/esense.dart';
 import 'location_overview.dart';
 import 'location.dart';
 import 'persistence.dart';
@@ -12,6 +10,7 @@ import 'audio.dart';
 import 'settings.dart';
 import 'geometry.dart';
 import 'notifications.dart';
+import 'interact.dart';
 
 class MapPage extends StatefulWidget {
   State<MapPage> createState() => MapPageState();
@@ -26,7 +25,7 @@ class MapPageState extends State<MapPage> {
   StreamSubscription dbSub;
   StreamSubscription gpsSub;
   SharedPreferences prefs;
-  StreamSubscription esenseSub;
+  ESenseInteract eSense;
 
   void showError(String msg) {
     final errorSnackBar = SnackBar(
@@ -57,26 +56,7 @@ class MapPageState extends State<MapPage> {
       gpsSub = BackgroundLocation.getStream().listen(_locationUpdate);
     });
 
-    SharedPreferences.getInstance().then((prefs) {
-      this.prefs = prefs;
-      var esenseName = prefs.getString(CONFIG_ESENSE_NAME);
-      if (esenseName == null) return;
-
-      ESenseManager.connect(esenseName).then((ret) {
-        if (!ret || ESenseManager.connected) {
-          showError("ESense nicht verbunden");
-          return;
-        }
-
-        setState(() {
-          esenseSub = ESenseManager.sensorEvents.listen(esenseUpdate);
-        });
-      });
-    });
-  }
-
-  void esenseUpdate(e) {
-    print("ESENSE: $e");
+    eSense = ESenseInteract();
   }
 
   void dbUpdated(_) {
@@ -120,6 +100,16 @@ class MapPageState extends State<MapPage> {
         showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}",
             id: 0);
         queueAudio(info);
+
+        Timer(Duration(seconds: 5), () {
+          if (!eSense.isWalking()) {
+            print("STOPPPED!");
+            playAudio();
+          } else {
+            print("Still Walking");
+          }
+        });
+
         areaEntered = true;
       }
     }
@@ -216,7 +206,6 @@ class MapPageState extends State<MapPage> {
   void dispose() {
     dbSub?.cancel();
     gpsSub?.cancel();
-    esenseSub?.cancel();
 
     BackgroundLocation.stop();
 
