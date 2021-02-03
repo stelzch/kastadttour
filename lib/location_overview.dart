@@ -3,6 +3,7 @@ import 'audio.dart';
 import 'persistence.dart';
 import 'dart:async';
 import 'dart:math';
+import 'animation.dart';
 
 class LocationOverview extends StatefulWidget {
   static const routeName = "/locationOverview";
@@ -67,7 +68,7 @@ class LocationCardState extends State<LocationCard> {
   }
 
   void gotoLocationPage(BuildContext ctx) {
-    Navigator.pushNamed(ctx, LocationPage.routeName, arguments: info);
+    Navigator.of(ctx).push(createAnimatedRoute(LocationPage(), info));
   }
 
   void cardAction(LocationCardAction action) {

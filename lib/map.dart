@@ -11,6 +11,7 @@ import 'settings.dart';
 import 'geometry.dart';
 import 'notifications.dart';
 import 'interact.dart';
+import 'animation.dart';
 
 class MapPage extends StatefulWidget {
   State<MapPage> createState() => MapPageState();
@@ -133,7 +134,8 @@ class MapPageState extends State<MapPage> {
             IconButton(
                 icon: Icon(Icons.info),
                 onPressed: () {
-                  Navigator.pushNamed(ctx, LocationOverview.routeName);
+                  Navigator.of(ctx)
+                      .push(createAnimatedRoute(LocationOverview()));
                 })
           ],
         ),
