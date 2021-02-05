@@ -160,16 +160,14 @@ class MapPageState extends State<MapPage> {
             ),
             Padding(
                 padding: EdgeInsets.only(top: 30, left: 8),
-                child: Text("© 2020 Christoph Stelz")),
+                child: Text("© 2021 Christoph Stelz")),
           ],
         )),
         body: Column(children: [
           Flexible(
               child: FlutterMap(
+            mapController: _mapController,
             options: MapOptions(
-                controller: _mapController,
-//                bounds: LatLngBounds(
-//                    LatLng(48.9906, 8.3657), LatLng(49.0257, 8.4358)),
                 center: LatLng(49.014, 8.40447),
                 zoom: 14,
                 minZoom: 12,
@@ -204,7 +202,10 @@ class MapPageState extends State<MapPage> {
           ))
         ]),
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.my_location), onPressed: () {}));
+            child: Icon(Icons.my_location),
+            onPressed: () {
+              _mapController?.move(_lastPos, 17.0);
+            }));
   }
 
   @override
