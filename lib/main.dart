@@ -9,6 +9,7 @@ import 'dart:async';
 import 'notifications.dart';
 import 'audio.dart';
 import 'location.dart';
+import 'interact.dart';
 
 FlutterLocalNotificationsPlugin notifications;
 

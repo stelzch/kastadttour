@@ -102,14 +102,17 @@ class MapPageState extends State<MapPage> {
             id: 0);
         queueAudio(info);
 
-        Timer(Duration(seconds: 5), () {
-          if (!eSense.isWalking()) {
-            print("STOPPPED!");
-            playAudio();
-          } else {
-            print("Still Walking");
-          }
-        });
+        if (prefs.getBool(CONFIG_ESENSE_AUTOPLAY_ENABLE)) {
+          // Try to determine if the user stopped walking after a few seconds
+          Timer(Duration(seconds: 2), () {
+            if (!eSense.isWalking()) {
+              print("STOPPPED!");
+              playAudio();
+            } else {
+              print("Still Walking");
+            }
+          });
+        }
 
         areaEntered = true;
       }
@@ -210,6 +213,8 @@ class MapPageState extends State<MapPage> {
     gpsSub?.cancel();
 
     BackgroundLocation.stop();
+    ESenseInteract.stop();
+    print("Stoppping EVERYTHING!");
 
     super.dispose();
   }

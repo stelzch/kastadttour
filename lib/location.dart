@@ -64,7 +64,11 @@ class BackgroundLocation {
   }
 
   static void _onStop() async {
-    BackgroundLocator.unRegisterLocationUpdate();
+    port.close();
+    await _streamController.close();
+    await IsolateNameServer.removePortNameMapping(
+        LocationCallbackHandler._isolateName);
+    await BackgroundLocator.unRegisterLocationUpdate();
   }
 
   static Future<void> initPlatformState() async {
@@ -80,8 +84,8 @@ class BackgroundLocation {
         iosSettings: IOSSettings(
             accuracy: LocationAccuracy.NAVIGATION, distanceFilter: 0),
         androidSettings: AndroidSettings(
-          accuracy: LocationAccuracy.NAVIGATION,
-          interval: 5,
+          accuracy: LocationAccuracy.HIGH,
+          interval: 4,
           distanceFilter: 0,
         ));
   }

@@ -8,11 +8,59 @@ import 'dart:async';
 
 import 'settings.dart';
 
+class InteractPage extends StatefulWidget {
+  State<InteractPage> createState() => InteractState();
+}
+
+class InteractState extends State<InteractPage> {
+  String sensorVal = "not read";
+  String mstate = "---";
+  Timer t;
+
+  @override
+  void initState() {
+    super.initState();
+
+    t = Timer.periodic(Duration(milliseconds: 250), timedRead);
+  }
+
+  void timedRead(t) {
+    setState(() {
+      mstate = "Walking: ${ESenseInteract().isWalking()}";
+      sensorVal = (ESenseInteract().gyroTimeseries.length > 0)
+          ? ESenseInteract().gyroTimeseries.last?.toString()
+          : "null";
+    });
+  }
+
+  Widget build(BuildContext ctx) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Interact")),
+      body: Column(children: [
+        Text(sensorVal),
+        Text(mstate),
+        ElevatedButton(
+            child: Text("Reconnect"),
+            onPressed: () {
+              ESenseInteract().reconnect();
+            }),
+      ]),
+    );
+  }
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+}
+
 class ESenseInteract {
   StreamSubscription sensorSub;
   StreamSubscription connEventSub;
   StreamSubscription esenseSub;
   AccelerometerOffsetRead offset;
+  num lastGyroY = 2.0;
 
   static final ESenseInteract _instance = ESenseInteract._init();
   var gyroTimeseries = [];
@@ -34,10 +82,11 @@ class ESenseInteract {
 
     //print(
     //    "ESENSELOG||${now.toIso8601String()},$accX,$accY,$accZ,${e.gyro[0]},${e.gyro[1]},${e.gyro[2]}");
-    print("ESENSE|$gyroX $gyroY $gyroZ");
+    print("ESENSE|$accZ | $gyroX $gyroY $gyroZ");
 
     if (gyroTimeseries.length >= 10) gyroTimeseries.removeAt(0);
-    gyroTimeseries.add(gyroX);
+    gyroTimeseries.add(gyroY);
+    lastGyroY = gyroY;
   }
 
   bool isWalking() {
@@ -49,7 +98,7 @@ class ESenseInteract {
     var now = gyroTimeseries[9];
     var diff = previousAvg - now;
 
-    return !(diff > 0.2 && now < 1.0);
+    return lastGyroY.abs() < 1.0;
   }
 
   void esenseEvents(e) {
@@ -102,6 +151,10 @@ class ESenseInteract {
       SharedPreferences.getInstance().then(connectEsense);
       connEventSub = ESenseManager.connectionEvents.listen(connectionEvent);
     });
+  }
+
+  static void stop() {
+    _instance.dispose();
   }
 
   @override

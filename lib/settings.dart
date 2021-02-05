@@ -8,6 +8,7 @@ import 'interact.dart';
 
 const String CONFIG_ESENSE_NAME = "esenseName";
 const String CONFIG_TAP_TO_SET_GPS = "tapToGPS";
+const String CONFIG_ESENSE_AUTOPLAY_ENABLE = "esenseAutoplay";
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/settings";
@@ -21,7 +22,9 @@ class SettingsState extends State<SettingsPage> {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool tapToSetGPS = true;
+  bool esenseAutoplay = false;
   SharedPreferences prefs;
+  StreamSubscription eSenseEventSub;
 
   @override
   void initState() {
@@ -35,7 +38,11 @@ class SettingsState extends State<SettingsPage> {
           esenseSelected = true;
         }
         tapToSetGPS = prefs.getBool(CONFIG_TAP_TO_SET_GPS) ?? false;
+        esenseAutoplay = prefs.getBool(CONFIG_ESENSE_AUTOPLAY_ENABLE) ?? false;
 
+        eSenseEventSub = ESenseManager.connectionEvents.listen((event) {
+          print('Connection event: $event');
+        });
         ESenseManager.connect(esenseName);
       });
     });
@@ -83,9 +90,6 @@ class SettingsState extends State<SettingsPage> {
   @override
   Widget build(BuildContext ctx) {
     var x = ESenseManager();
-    ESenseManager.connectionEvents.listen((event) {
-      print('Connection event: $event');
-    });
 
     return Scaffold(
         key: _scaffoldKey,
@@ -95,7 +99,7 @@ class SettingsState extends State<SettingsPage> {
         body: Padding(
             padding: EdgeInsets.only(left: 10),
             child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text("eSense"),
                 ElevatedButton(
                   child: Text(esenseName),
@@ -103,11 +107,13 @@ class SettingsState extends State<SettingsPage> {
                     selectEsense(ctx);
                   },
                 ),
-                ElevatedButton(
-                    child: Icon(Icons.info),
-                    onPressed: () {
-                      getEsenseInfo(ctx);
-                    }),
+                Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: ElevatedButton(
+                        child: Icon(Icons.info),
+                        onPressed: () {
+                          getEsenseInfo(ctx);
+                        })),
               ]),
               Row(children: [
                 Text("Tippen um Standort zu bewegen"),
@@ -122,12 +128,33 @@ class SettingsState extends State<SettingsPage> {
                       });
                     })
               ]),
-              ElevatedButton(
-                  child: Text("ESense reconnect"),
-                  onPressed: () {
-                    ESenseInteract().reconnect();
-                  }),
+              Row(children: [
+                Text("Autoplay über ESense Gyrometer"),
+                Checkbox(
+                    value: esenseAutoplay,
+                    onChanged: (value) {
+                      SharedPreferences.getInstance().then((prefs) {
+                        prefs.setBool(CONFIG_ESENSE_AUTOPLAY_ENABLE, value);
+                        setState(() {
+                          esenseAutoplay = value;
+                        });
+                      });
+                    })
+              ]),
+              Row(children: [
+                ElevatedButton(
+                    child: Text("ESense reconnect"),
+                    onPressed: () {
+                      ESenseInteract().reconnect();
+                    })
+              ]),
             ])));
+  }
+
+  @override
+  void dispose() {
+    eSenseEventSub?.cancel();
+    super.dispose();
   }
 }
 
