@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -55,9 +56,16 @@ class MapPageState extends State<MapPage> {
 
     setState(() {
       gpsSub = BackgroundLocation.getStream().listen(_locationUpdate);
+      gpsSub.onDone(locationStreamEnded);
     });
 
     eSense = ESenseInteract();
+  }
+
+  void locationStreamEnded() {
+    print("Location quitted");
+    // Exit app
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 
   void dbUpdated(_) {
@@ -98,8 +106,8 @@ class MapPageState extends State<MapPage> {
       inAreaBefore |= pointInPolygon(info.zone, _lastPos);
 
       if (pointInPolygon(info.zone, pos) && !inAreaBefore) {
-        showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}",
-            id: 0);
+        //showNotification("Neuen Ort entdeckt", "Willkommen am ${info.name}",
+        //    id: 0);
         queueAudio(info);
 
         if (prefs.getBool(CONFIG_ESENSE_AUTOPLAY_ENABLE)) {
@@ -120,7 +128,7 @@ class MapPageState extends State<MapPage> {
 
     if (!areaEntered && !inAreaBefore) {
       //dequeueAudio();
-      cancelNotification(0);
+      //cancelNotification(0);
     }
 
     _lastPos.latitude = pos.latitude;
@@ -215,7 +223,6 @@ class MapPageState extends State<MapPage> {
 
     BackgroundLocation.stop();
     ESenseInteract.stop();
-    print("Stoppping EVERYTHING!");
 
     super.dispose();
   }

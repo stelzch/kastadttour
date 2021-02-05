@@ -153,6 +153,7 @@ class SettingsState extends State<SettingsPage> {
 
   @override
   void dispose() {
+    print("Dispose Settings");
     eSenseEventSub?.cancel();
     super.dispose();
   }

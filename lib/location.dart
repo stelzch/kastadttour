@@ -35,6 +35,10 @@ class BackgroundLocation {
     port.listen((dynamic data) async {
       print("Port received");
       print("$data");
+      if (data == "QUIT") {
+        stop();
+        return;
+      }
       if (data != null &&
           _streamController.hasListener &&
           !_streamController.isPaused) {
@@ -84,15 +88,25 @@ class BackgroundLocation {
         iosSettings: IOSSettings(
             accuracy: LocationAccuracy.NAVIGATION, distanceFilter: 0),
         androidSettings: AndroidSettings(
-          accuracy: LocationAccuracy.HIGH,
-          interval: 4,
-          distanceFilter: 0,
-        ));
+            accuracy: LocationAccuracy.NAVIGATION,
+            interval: 4,
+            distanceFilter: 1,
+            androidNotificationSettings: AndroidNotificationSettings(
+                notificationTitle: "Standorterkennung aktiviert",
+                notificationChannelName: "Standorterkennung",
+                notificationIcon: '',
+                notificationIconColor: Colors.grey,
+                notificationMsg: "Msg",
+                notificationBigMsg:
+                    "Der Stadtführer wird Sie benachrichtigen, sobald Sie eine interessante Gegend betreten. Tippe um zu Beenden.",
+                notificationTapCallback:
+                    LocationCallbackHandler.notificationCallback)));
   }
 
   /* Source: https://github.com/rekab-app/background_locator/blob/master/example/lib/main.dart */
   static Future<bool> _checkLocationPermission() async {
-    final access = await LocationPermissions().checkPermissionStatus();
+    final PermissionStatus access =
+        await LocationPermissions().checkPermissionStatus();
 
     switch (access) {
       case PermissionStatus.unknown:
@@ -114,46 +128,6 @@ class BackgroundLocation {
   }
 }
 
-/*
-class MLocationPage extends StatefulWidget {
-  State<MLocationPage> createState() => _LocationState();
-}
-
-class _LocationState extends State<MLocationPage> {
-  String loc = "";
-  StreamSubscription locSub;
-  @override
-  void initState() {
-    super.initState();
-    locSub = BackgroundLocationController.getStream().listen(locationReceived);
-    BackgroundLocationController.start();
-  }
-
-  void locationReceived(LatLng location) {
-    setState(() {
-      loc = location.toString();
-    });
-  }
-
-  @override
-  void dispose() {
-    locSub?.cancel();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext ctx) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("LocPage"),
-      ),
-      body: Text(loc),
-    );
-  }
-}
-*/
-
 class LocationCallbackHandler {
   static const String _isolateName = "LocatorIsolate";
   static Future<void> initCallback(Map<dynamic, dynamic> params) async {}
@@ -164,4 +138,9 @@ class LocationCallbackHandler {
   }
 
   static Future<void> disposeCallback() async {}
+
+  static void notificationCallback() {
+    final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
+    send?.send("QUIT");
+  }
 }
