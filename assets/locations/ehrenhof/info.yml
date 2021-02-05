@@ -1,7 +1,7 @@
 name: Ehrenhof
 cover:
   src: ehrenhof.jpg
-  attribution: https://commons.wikimedia.org/wiki/User:GjR
+  attribution: User:GjR von https://commons.wikimedia.org/wiki/File:Ehrenhof_der_Universit%C3%A4t_Karlsruhe_2.JPG
 zone:
   - {lat: 49.009881, lng: 8.412195}
   - {lat: 49.009497, lng: 8.412199}

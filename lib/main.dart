@@ -6,6 +6,7 @@ import 'persistence.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'notifications.dart';
 import 'audio.dart';
+import 'about.dart';
 
 FlutterLocalNotificationsPlugin notifications;
 
@@ -31,9 +32,8 @@ class MyApp extends StatelessWidget {
         ),
         home: MapPage(),
         routes: {
-          LocationPage.routeName: (ctx) => LocationPage(),
-          LocationOverview.routeName: (ctx) => LocationOverview(),
           SettingsPage.routeName: (ctx) => SettingsPage(),
+          AboutPage.routeName: (ctx) => AboutPage(),
         });
   }
 }

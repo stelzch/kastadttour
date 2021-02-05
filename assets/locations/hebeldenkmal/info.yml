@@ -1,7 +1,7 @@
 name: Hebeldenkmal
 cover:
   src: hebeldenkmal.jpg
-  attribution: https://commons.wikimedia.org/wiki/User:Hozro
+  attribution: User:Hozro von https://commons.wikimedia.org/wiki/File:Karlsruhe_Schlosspark_Denkmal_Johann-Peter_Hebel.jpg
 audio: audio.mp3
 zone:
   - {lat: 49.014377, lng: 8.403117}

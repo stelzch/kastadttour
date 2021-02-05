@@ -10,6 +10,7 @@ import 'persistence.dart';
 import 'audio.dart';
 import 'settings.dart';
 import 'geometry.dart';
+import 'about.dart';
 import 'notifications.dart';
 import 'interact.dart';
 import 'animation.dart';
@@ -164,6 +165,13 @@ class MapPageState extends State<MapPage> {
               title: Text('Einstellungen'),
               onTap: () {
                 Navigator.pushNamed(ctx, SettingsPage.routeName);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('Über die App'),
+              onTap: () {
+                Navigator.pushNamed(ctx, AboutPage.routeName);
               },
             ),
             Padding(

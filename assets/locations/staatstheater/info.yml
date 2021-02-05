@@ -1,7 +1,7 @@
 name: Badisches Staatstheater
 cover:
   src: cover.jpg
-  attribution: Andreas Praefcke von https://commons.wikimedia.org/wiki/File:Karlsruhe_Staatstheater_01.jpg
+  attribution: User:Andreas Praefcke von https://commons.wikimedia.org/wiki/File:Karlsruhe_Staatstheater_01.jpg
 audio: audio.mp3
 zone:
   - {lat: 49.005197, lng: 8.404731}
