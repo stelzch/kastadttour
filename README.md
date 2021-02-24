@@ -3,7 +3,13 @@
 
 Dieses Projekt ist eine Art GPS-gestützter Audioguide durch Karlsruhe. Es ist im Rahmen der Vorlesung „Mobile Computing and Internet of Things“ des [TECO](https://www.teco.edu/) entstanden.
 
+Wenn du an einer der in der Karte blau eingezeichneten Regionen vorbeikommst, lädt die App eine Audioinformation zu dem jeweiligen Ort. In der Navigationsleiste kannst du dann auf Play drücken.
+
+Die Standortberechtigung wird benötigt, um zu erkennen wo das Smartphone sich gerade befindet. Diese App erfordert keine Internetverbindung! Die Karte sowie die Audiodateien funktionieren vollständig offline.
+
 ## Screenshots
+
+![3 Screenshots der Anwendung](./contrib/screenshot.jpg)
 
 
 
