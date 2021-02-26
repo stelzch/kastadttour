@@ -96,7 +96,7 @@ class BackgroundLocation {
                 notificationChannelName: "Standorterkennung",
                 notificationIcon: '',
                 notificationIconColor: Colors.grey,
-                notificationMsg: "Msg",
+                notificationMsg: "App hält Ausschau nach interessanten Orten!",
                 notificationBigMsg:
                     "Der Stadtführer wird Sie benachrichtigen, sobald Sie eine interessante Gegend betreten. Tippe um zu Beenden.",
                 notificationTapCallback:
